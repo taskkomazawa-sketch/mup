@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 st.title("🎰 MUP")
-st.caption("Minowa UNO Digital Twin")
+st.caption("Minowa UNO Prediction")
 
 
 loader = LayoutLoader(
@@ -33,21 +33,18 @@ c1, c2, c3 = st.columns(3)
 
 c1.metric("Cells", len(store.cells))
 c2.metric("Seats", len(store.seats))
-c3.metric("Promotion", len(promotion))
+c3.metric("Promotion", len(store.seats_by_zone("Promotion")))
 
 st.divider()
 
-rows = []
-
-for seat in sorted(store.seats, key=lambda s: s.number):
-
-    rows.append(
-        {
-            "Seat": seat.number,
-            "Cell": seat.cell.id,
-            "Zone": seat.zone.name,
-        }
-    )
+rows = [
+    {
+        "Seat": seat.number,
+        "Cell": seat.cell.id,
+        "Zone": seat.zone.name,
+    }
+    for seat in sorted(store.seats, key=lambda s: s.number)
+]
 
 st.dataframe(
     rows,
