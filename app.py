@@ -1,5 +1,18 @@
+import streamlit as st
+
 from engine.layout.loader import LayoutLoader
 from engine.layout.store_builder import StoreBuilder
+
+
+st.set_page_config(
+    page_title="MUP",
+    page_icon="🎰",
+    layout="wide",
+)
+
+st.title("🎰 MUP")
+st.caption("Minowa UNO Digital Twin")
+
 
 loader = LayoutLoader(
     "data/layouts/minowa_uno_coordinate_map.xlsx"
@@ -14,33 +27,30 @@ store = builder.build(
     cells,
 )
 
-print(store.name)
-
-seat640 = store.get_seat(640)
-
-print(seat640)
-
-print()
-
-print(store.get_cell("R12"))
-
-print()
-
 promotion = store.seats_by_zone("Promotion")
 
-print(f"Promotion Zone : {len(promotion)} seats")
+c1, c2, c3 = st.columns(3)
 
-for seat in promotion:
-    print(seat.number)
+c1.metric("Cells", len(store.cells))
+c2.metric("Seats", len(store.seats))
+c3.metric("Promotion", len(promotion))
 
-from engine.layout.graph import CellGraph
+st.divider()
 
-graph = CellGraph(cells)
+rows = []
 
-cell = graph.get("R12")
+for seat in sorted(store.seats, key=lambda s: s.number):
 
-print(cell)
-print("UP   :", graph.up(cell))
-print("DOWN :", graph.down(cell))
-print("LEFT :", graph.left(cell))
-print("RIGHT:", graph.right(cell))
+    rows.append(
+        {
+            "Seat": seat.number,
+            "Cell": seat.cell.id,
+            "Zone": seat.zone.name,
+        }
+    )
+
+st.dataframe(
+    rows,
+    use_container_width=True,
+    hide_index=True,
+)
