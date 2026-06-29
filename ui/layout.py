@@ -58,6 +58,25 @@ def show_layout(store, selected_seat=None):
         font-weight: 900;
         border: 2px solid #f9a825;
     }
+    td.heat4 {
+    background: #2ecc71;
+    font-weight: bold;
+    }
+
+    td.heat3 {
+        background: #b7f7c3;
+        font-weight: bold;
+    }
+
+    td.heat2 {
+        background: #f3f4f6;
+        font-weight: bold;
+    }
+
+    td.heat1 {
+        background: #ffb3b3;
+        font-weight: bold;
+    }
     </style>
 
     <div class="hall-wrap">
@@ -83,7 +102,16 @@ def show_layout(store, selected_seat=None):
             elif seat.zone.name == "NewMachine":
                 css = "newmachine"
             else:
-                css = "seat"
+                diff = seat.state.diff
+
+                if diff >= 3000:
+                    css = "heat4"
+                elif diff >= 1000:
+                    css = "heat3"
+                elif diff >= 0:
+                    css = "heat2"
+                else:
+                    css = "heat1"
 
             table += f'<td class="{css}">{value}</td>'
 

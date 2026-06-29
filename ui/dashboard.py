@@ -1,11 +1,21 @@
 import streamlit as st
 
+from engine.data.csv_loader import load_csv
 from ui.layout import show_layout
 
 
 def show_dashboard(store):
     st.title("🎰 MUP")
     st.caption("Minowa UNO Digital Twin")
+
+    uploaded = st.file_uploader(
+        "営業データ(CSV)",
+        type="csv",
+    )
+
+    if uploaded:
+        rows = load_csv(uploaded)
+        store.apply_csv(rows)
 
     c1, c2, c3 = st.columns(3)
 
@@ -35,6 +45,8 @@ def show_dashboard(store):
         st.write(f"**Cell** : {seat.cell.id}")
         st.write(f"**Row** : {seat.cell.row}")
         st.write(f"**Column** : {seat.cell.col}")
+        st.write(f"**Games** : {seat.state.games}")
+        st.write(f"**Diff** : {seat.state.diff:+}")
         st.divider()
         st.subheader("Neighbors")
 

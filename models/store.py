@@ -55,7 +55,17 @@ class Store:
         if cell is None:
             return None
 
+        return self.find_seat_by_cell(cell)
+
+    def find_seat_by_cell(self, cell: Cell) -> Seat | None:
         return self._seat_by_cell.get(cell.id)
 
-        return None  
+    def apply_csv(self, rows):
+        for row in rows:
+            seat = self.get_seat(int(row["seat"]))
 
+            if seat is None:
+                continue
+
+            seat.state.games = int(row["games"])
+            seat.state.diff = int(row["diff"])
