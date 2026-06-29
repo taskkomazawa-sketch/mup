@@ -4,73 +4,65 @@ import streamlit as st
 
 
 def show_layout(store):
+    st.error("NEW LAYOUT LOADED")
     st.divider()
-    st.subheader("Hall Layout")
+    st.subheader("Layout")
 
-    max_row = max(cell.row for cell in store.cells)
-    max_col = max(cell.col for cell in store.cells)
+    rows = sorted({seat.cell.row for seat in store.seats})
+    cols = sorted({seat.cell.col for seat in store.seats})
 
-    cell_map = {
-        (cell.row, cell.col): cell
-        for cell in store.cells
+    seat_by_position = {
+        (seat.cell.row, seat.cell.col): seat
+        for seat in store.seats
     }
 
     table = """
     <style>
-      .hall-wrap {
+    .hall-wrap {
         overflow-x: auto;
-        border: 1px solid #ddd;
         padding: 8px;
         background: #fafafa;
-      }
-      table.hall {
+        border: 1px solid #ddd;
+    }
+    table.hall {
         border-collapse: collapse;
         table-layout: fixed;
-      }
-      table.hall td {
-        width: 42px;
-        height: 28px;
-        min-width: 42px;
-        max-width: 42px;
-        border: 1px solid #e0e0e0;
+    }
+    table.hall td {
+        width: 48px;
+        min-width: 48px;
+        height: 30px;
+        border: 1px solid #ddd;
         text-align: center;
         vertical-align: middle;
         font-size: 11px;
         white-space: nowrap;
-      }
-      td.seat {
+    }
+    td.seat {
         background: #f1f3f5;
         font-weight: 700;
-      }
-      td.aisle {
-        background: #ffffff;
-        color: #cccccc;
-      }
-      td.blank {
-        background: #ffffff;
-        border-color: #ffffff;
-      }
+    }
+    td.blank {
+        background: white;
+        border-color: #f5f5f5;
+    }
     </style>
+
     <div class="hall-wrap">
     <table class="hall">
     """
 
-    for row in range(1, max_row + 1):
+    for row in rows:
         table += "<tr>"
 
-        for col in range(1, max_col + 1):
-            cell = cell_map.get((row, col))
+        for col in cols:
+            seat = seat_by_position.get((row, col))
 
-            if cell is None or cell.value is None:
+            if seat is None:
                 table += '<td class="blank"></td>'
-                continue
-
-            value = html.escape(str(cell.value))
-
-            if isinstance(cell.value, int):
-                table += f'<td class="seat">{value}</td>'
             else:
-                table += f'<td class="aisle">{value}</td>'
+                value = html.escape(str(seat.number))
+                table += f'<td class="seat">{value}</td>'
 
         table += "</tr>"
 
