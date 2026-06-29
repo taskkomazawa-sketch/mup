@@ -17,6 +17,10 @@ class Store:
             (cell.row, cell.col): cell
             for cell in self.cells
         }
+        self._seat_by_cell = {
+            seat.cell.id: seat
+            for seat in self.seats
+        }        
 
     def get_cell(self, cell_id: str) -> Cell | None:
         return self._cells.get(cell_id)
@@ -51,9 +55,7 @@ class Store:
         if cell is None:
             return None
 
-        for s in self.seats:
-            if s.cell == cell:
-                return s
+        return self._seat_by_cell.get(cell.id)
 
         return None  
 
