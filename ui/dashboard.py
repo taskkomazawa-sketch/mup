@@ -15,21 +15,18 @@ def show_dashboard(store):
 
     left, right = st.columns([3, 1])
 
+    seat_numbers = sorted(seat.number for seat in store.seats)
+
+    selected = right.selectbox(
+        "Seat",
+        seat_numbers,
+        key="seat_selector",
+    )
+
     with left:
-        show_layout(store)
+        show_layout(store, selected_seat=selected)
 
     with right:
-        seat_numbers = sorted(
-            seat.number
-            for seat in store.seats
-        )
-
-        selected = st.selectbox(
-            "Seat",
-            seat_numbers,
-            key="seat_selector",
-        )
-
         seat = store.get_seat(selected)
 
         st.subheader("Seat Detail")

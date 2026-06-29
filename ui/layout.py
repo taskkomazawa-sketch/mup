@@ -3,7 +3,7 @@ import html
 import streamlit as st
 
 
-def show_layout(store):
+def show_layout(store, selected_seat=None):
     st.divider()
     st.subheader("Layout")
 
@@ -37,23 +37,26 @@ def show_layout(store):
         font-size: 11px;
         white-space: nowrap;
     }
-    .seat {
+    td.seat {
         background: #f3f4f6;
         font-weight: bold;
     }
-
-    .promotion {
+    td.promotion {
         background: #b7f7c3;
         font-weight: bold;
     }
-
-    .newmachine {
+    td.newmachine {
         background: #b9d9ff;
         font-weight: bold;
     }
     td.blank {
         background: white;
         border-color: #f5f5f5;
+    }
+    td.selected {
+        background: #fff176;
+        font-weight: 900;
+        border: 2px solid #f9a825;
     }
     </style>
 
@@ -69,18 +72,20 @@ def show_layout(store):
 
             if seat is None:
                 table += '<td class="blank"></td>'
+                continue
+
+            value = html.escape(str(seat.number))
+
+            if selected_seat is not None and seat.number == selected_seat:
+                css = "selected"
+            elif seat.zone.name == "Promotion":
+                css = "promotion"
+            elif seat.zone.name == "NewMachine":
+                css = "newmachine"
             else:
-                value = html.escape(str(seat.number))
-                zone = seat.zone.name
+                css = "seat"
 
-                if zone == "Promotion":
-                    css = "promotion"
-                elif zone == "NewMachine":
-                    css = "newmachine"
-                else:
-                    css = "seat"
-
-                table += f'<td class="{css}">{value}</td>'
+            table += f'<td class="{css}">{value}</td>'
 
         table += "</tr>"
 
