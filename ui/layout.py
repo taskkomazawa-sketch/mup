@@ -4,7 +4,6 @@ import streamlit as st
 
 
 def show_layout(store):
-    st.error("NEW LAYOUT LOADED")
     st.divider()
     st.subheader("Layout")
 
@@ -38,9 +37,19 @@ def show_layout(store):
         font-size: 11px;
         white-space: nowrap;
     }
-    td.seat {
-        background: #f1f3f5;
-        font-weight: 700;
+    .seat {
+        background: #f3f4f6;
+        font-weight: bold;
+    }
+
+    .promotion {
+        background: #b7f7c3;
+        font-weight: bold;
+    }
+
+    .newmachine {
+        background: #b9d9ff;
+        font-weight: bold;
     }
     td.blank {
         background: white;
@@ -62,7 +71,16 @@ def show_layout(store):
                 table += '<td class="blank"></td>'
             else:
                 value = html.escape(str(seat.number))
-                table += f'<td class="seat">{value}</td>'
+                zone = seat.zone.name
+
+                if zone == "Promotion":
+                    css = "promotion"
+                elif zone == "NewMachine":
+                    css = "newmachine"
+                else:
+                    css = "seat"
+
+                table += f'<td class="{css}">{value}</td>'
 
         table += "</tr>"
 
