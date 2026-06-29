@@ -35,3 +35,18 @@ def show_dashboard(store):
         st.write(f"**Cell** : {seat.cell.id}")
         st.write(f"**Row** : {seat.cell.row}")
         st.write(f"**Column** : {seat.cell.col}")
+        st.divider()
+        st.subheader("Neighbors")
+
+        for direction, icon in [
+            ("up", "⬆️"),
+            ("down", "⬇️"),
+            ("left", "⬅️"),
+            ("right", "➡️"),
+        ]:
+            neighbor = store.get_neighbor(seat, direction)
+
+            st.write(
+                icon,
+                neighbor.number if neighbor else "通路",
+            )

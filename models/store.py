@@ -33,3 +33,27 @@ class Store:
             for seat in self.seats
             if seat.zone.name == zone_name
         ]
+    def get_neighbor(self, seat: Seat, direction: str) -> Seat | None:
+        offsets = {
+            "up": (-1, 0),
+            "down": (1, 0),
+            "left": (0, -1),
+            "right": (0, 1),
+        }
+
+        dr, dc = offsets[direction]
+
+        row = seat.cell.row + dr
+        col = seat.cell.col + dc
+
+        cell = self.get_cell_by_position(row, col)
+
+        if cell is None:
+            return None
+
+        for s in self.seats:
+            if s.cell == cell:
+                return s
+
+        return None  
+
